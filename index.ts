@@ -5,7 +5,7 @@ const TORII_BASE = "https://api.cartridge.gg/x";
 
 const S0_SLOTS = Array.from({ length: 12 }, (_, i) => ({ slot: `s0-game-${i + 1}`, label: `G${i + 1}` }));
 const ACTIVE_SLOTS = [
-  { slot: "slot-blitz-4", label: "sg-5" },
+  { slot: "slot-blitz-19", label: "sg-5" },
 ];
 const ALL_SLOTS = [...S0_SLOTS, ...ACTIVE_SLOTS];
 
