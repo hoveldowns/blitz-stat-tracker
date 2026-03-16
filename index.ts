@@ -114,9 +114,9 @@ async function getStats(playerInput: string) {
   console.log();
 }
 
-async function schemaDiff() {
+async function schemaDiff(overrideSlot?: string) {
   const REF_SLOT = "s0-game-12";
-  const NEW_SLOT = ACTIVE_SLOTS[0].slot;
+  const NEW_SLOT = overrideSlot ?? ACTIVE_SLOTS[0].slot;
 
   console.log(`\nSchema diff: ${REF_SLOT} → ${NEW_SLOT}\n`);
 
@@ -152,7 +152,7 @@ async function schemaDiff() {
 const input = process.argv[2];
 if (!input) {
   console.log("Usage: bun run index.ts <player_name_or_address>");
-  console.log("       bun run index.ts --schema-diff");
+  console.log("       bun run index.ts --schema-diff [slot-name]");
   console.log("Examples:");
   console.log("  bun run index.ts tsuaurym");
   console.log("  bun run index.ts lgccharrmander");
@@ -161,7 +161,7 @@ if (!input) {
 }
 
 if (input === "--schema-diff") {
-  schemaDiff();
+  schemaDiff(process.argv[3]);
 } else {
   getStats(input);
 }
