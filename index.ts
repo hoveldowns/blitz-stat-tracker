@@ -114,9 +114,45 @@ async function getStats(playerInput: string) {
   console.log();
 }
 
+async function schemaDiff() {
+  const REF_SLOT = "s0-game-12";
+  const NEW_SLOT = ACTIVE_SLOTS[0].slot;
+
+  console.log(`\nSchema diff: ${REF_SLOT} → ${NEW_SLOT}\n`);
+
+  const [refRows, newRows] = await Promise.all([
+    sql(REF_SLOT, `SELECT name FROM sqlite_master WHERE type='table' ORDER BY name`),
+    sql(NEW_SLOT, `SELECT name FROM sqlite_master WHERE type='table' ORDER BY name`),
+  ]);
+
+  if (!refRows) { console.error(`Could not reach ${REF_SLOT}`); process.exit(1); }
+  if (!newRows) { console.error(`Could not reach ${NEW_SLOT} — may not be provisioned yet`); process.exit(1); }
+
+  const refTables = new Set(refRows.map((r: any) => r.name as string));
+  const newTables = new Set(newRows.map((r: any) => r.name as string));
+
+  const added = [...newTables].filter(t => !refTables.has(t)).sort();
+  const removed = [...refTables].filter(t => !newTables.has(t)).sort();
+  const unchanged = [...newTables].filter(t => refTables.has(t)).sort();
+
+  if (added.length) {
+    console.log(`  + NEW (${added.length})`);
+    for (const t of added) console.log(`    + ${t}`);
+    console.log();
+  }
+  if (removed.length) {
+    console.log(`  - REMOVED (${removed.length})`);
+    for (const t of removed) console.log(`    - ${t}`);
+    console.log();
+  }
+  console.log(`  = UNCHANGED: ${unchanged.length} tables`);
+  console.log();
+}
+
 const input = process.argv[2];
 if (!input) {
   console.log("Usage: bun run index.ts <player_name_or_address>");
+  console.log("       bun run index.ts --schema-diff");
   console.log("Examples:");
   console.log("  bun run index.ts tsuaurym");
   console.log("  bun run index.ts lgccharrmander");
@@ -124,4 +160,8 @@ if (!input) {
   process.exit(0);
 }
 
-getStats(input);
+if (input === "--schema-diff") {
+  schemaDiff();
+} else {
+  getStats(input);
+}
