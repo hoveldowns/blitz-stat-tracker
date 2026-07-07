@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: blitz-stat-api
+    runtime: node
+    buildCommand: npm install
+    startCommand: npx tsx src/index.ts
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: MPPX_SECRET_KEY
+        sync: false   # set in Render dashboard — generate with: openssl rand -hex 32
+      - key: DATABASE_URL
+        fromDatabase:
+          name: blitz-stat-db
+          property: connectionString
+      - key: PORT
+        value: "3000"
+
+databases:
+  - name: blitz-stat-db
+    databaseName: blitz_stat
+    plan: free

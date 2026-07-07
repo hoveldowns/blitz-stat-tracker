@@ -1,12 +1,24 @@
 {
   "name": "stat-tracker",
-  "module": "index.ts",
+  "version": "1.0.0",
+  "module": "src/index.ts",
   "type": "module",
   "private": true,
-  "devDependencies": {
-    "@types/bun": "latest"
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "start": "tsx src/index.ts"
   },
-  "peerDependencies": {
+  "dependencies": {
+    "express": "^4.21.2",
+    "mppx": "^0.4.7",
+    "pg": "^8.13.0",
+    "tsx": "^4.19.0",
+    "viem": "^2.46.2"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.0.0",
+    "@types/pg": "^8.11.0",
     "typescript": "^5.9.3"
   }
 }
